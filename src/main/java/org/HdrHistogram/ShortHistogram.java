@@ -36,6 +36,12 @@ public class ShortHistogram extends AbstractHistogram {
     void clearCounts() {
         java.util.Arrays.fill(counts, (short) 0);
     }
+    
+    public ShortHistogram copy() {
+      ShortHistogram copy = new ShortHistogram(highestTrackableValue, numberOfSignificantValueDigits);
+      copy.add(this);
+      return copy;
+    }
 
     /**
      * Provide a (conservatively high) estimate of the Histogram's total footprint in bytes
