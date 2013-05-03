@@ -11,7 +11,6 @@ package org.HdrHistogram;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * <h3>A High Dynamic Range (HDR) Histogram</h3>
@@ -53,6 +52,12 @@ public class Histogram extends AbstractHistogram {
 
     void clearCounts() {
         java.util.Arrays.fill(counts, 0);
+    }
+    
+    public Histogram copy() {
+      Histogram copy = new Histogram(highestTrackableValue, numberOfSignificantValueDigits);
+      copy.add(this);
+      return copy;
     }
 
     /**

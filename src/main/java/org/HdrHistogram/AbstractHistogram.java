@@ -238,6 +238,13 @@ public abstract class AbstractHistogram implements Serializable {
     abstract void addToCountAtIndex(int index, long value);
 
     abstract void clearCounts();
+    
+    /**
+     * Create a copy of this histogram, complete with data and everything.
+     * 
+     * @return A distinct copy of this histogram.
+     */
+    abstract public AbstractHistogram copy();
 
     /**
      * Provide a (conservatively high) estimate of the Histogram's total footprint in bytes

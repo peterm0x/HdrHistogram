@@ -36,6 +36,12 @@ public class IntHistogram extends AbstractHistogram {
     void clearCounts() {
         java.util.Arrays.fill(counts, 0);
     }
+    
+    public IntHistogram copy() {
+      IntHistogram copy = new IntHistogram(highestTrackableValue, numberOfSignificantValueDigits);
+      copy.add(this);
+      return copy;
+    }
 
     /**
      * Provide a (conservatively high) estimate of the Histogram's total footprint in bytes

@@ -9,7 +9,6 @@
 
 package org.HdrHistogram;
 
-import org.HdrHistogram.*;
 import org.junit.*;
 import java.io.*;
 import java.util.zip.Deflater;
@@ -253,15 +252,21 @@ public class HistogramTest {
             if (in !=null) in.close();
             if (bis != null) bis.close();
         }
-        Assert.assertNotSame(null, newHistogram);
-        Assert.assertEquals(histogram.getHistogramData().getCountAtValue(testValueLevel),
-                newHistogram.getHistogramData().getCountAtValue(testValueLevel));
-        Assert.assertEquals(histogram.getHistogramData().getCountAtValue(testValueLevel * 10),
-                newHistogram.getHistogramData().getCountAtValue(testValueLevel * 10));
-        Assert.assertEquals(histogram, newHistogram);
-        Assert.assertEquals(histogram.getHistogramData().getTotalCount(),
-                newHistogram.getHistogramData().getTotalCount());
+        Assert.assertNotNull(newHistogram);
+        assertEqual(histogram, newHistogram);
+    }
 
+    private void assertEqual(AbstractHistogram expectedHistogram, AbstractHistogram actualHistogram) {
+        Assert.assertEquals(expectedHistogram, actualHistogram);
+        Assert.assertEquals(
+                expectedHistogram.getHistogramData().getCountAtValue(testValueLevel),
+                actualHistogram.getHistogramData().getCountAtValue(testValueLevel));
+        Assert.assertEquals(
+                expectedHistogram.getHistogramData().getCountAtValue(testValueLevel * 10),
+                actualHistogram.getHistogramData().getCountAtValue(testValueLevel * 10));
+        Assert.assertEquals(
+                expectedHistogram.getHistogramData().getTotalCount(),
+                actualHistogram.getHistogramData().getTotalCount());
     }
 
     @Test
@@ -293,6 +298,27 @@ public class HistogramTest {
         histogram.getHistogramData().outputPercentileDistribution(System.out, 5, 100.0);
     }
 
-
-
+    @Test
+    public void testCopy() throws Exception {
+        Histogram histogram = new Histogram(highestTrackableValue, numberOfSignificantValueDigits);
+        histogram.recordValue(testValueLevel);
+        histogram.recordValue(testValueLevel * 10);
+        histogram.recordValue(histogram.getHighestTrackableValue() - 1, 31);
+        
+        assertEqual(histogram, histogram.copy());
+  
+        IntHistogram intHistogram = new IntHistogram(highestTrackableValue, numberOfSignificantValueDigits);
+        intHistogram.recordValue(testValueLevel);
+        intHistogram.recordValue(testValueLevel * 10);
+        intHistogram.recordValue(intHistogram.getHighestTrackableValue() - 1, 31);
+        
+        assertEqual(intHistogram, intHistogram.copy());
+  
+        ShortHistogram shortHistogram = new ShortHistogram(highestTrackableValue, numberOfSignificantValueDigits);
+        shortHistogram.recordValue(testValueLevel);
+        shortHistogram.recordValue(testValueLevel * 10);
+        shortHistogram.recordValue(shortHistogram.getHighestTrackableValue() - 1, 31);
+        
+        assertEqual(shortHistogram, shortHistogram.copy());
+    }
 }
